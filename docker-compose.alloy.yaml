@@ -1,0 +1,16 @@
+services:
+  app:
+    image: node:22-bookworm
+    working_dir: /workspace/Backend
+    network_mode: host
+    volumes:
+      - .:/workspace
+      - backend_node_modules:/workspace/Backend/node_modules
+    environment:
+      PORT: "3000"
+      IS_ALLOY: ${IS_ALLOY:-false}
+      SECRET_KEY_GEMINI_API: ${SECRET_KEY_GEMINI_API:-}
+    command: bash -lc "npm ci && npm run dev"
+
+volumes:
+  backend_node_modules:

@@ -26,9 +26,9 @@ const frontendPath = path.resolve(__dirname, "../Frontend");
 app.use(express.static(frontendPath));
 
 // ----- GEN AI (optional) -----
-const genAI = new GoogleGenAI({
-  apiKey: process.env.SECRET_KEY_GEMINI_API,
-});
+const genAI = process.env.SECRET_KEY_GEMINI_API
+  ? new GoogleGenAI({ apiKey: process.env.SECRET_KEY_GEMINI_API })
+  : null;
 
 // ----- helpers: guestbook storage -----
 const guestbookFile = path.join(__dirname, "guestbook.json");
@@ -63,7 +63,7 @@ app.get("/chat", async (req, res) => {
     const prompt = req.query.prompt || "Halo!";
 
     // fallback kalau apiKey belum ada
-    if (!process.env.SECRET_KEY_GEMINI_API) {
+    if (!genAI) {
       return res.status(200).json({
         status: "success",
         message: {
